@@ -14,6 +14,30 @@ void printMaxTweeter(struct Pair arr[]) {
         printf("%s: %d\n", arr[i].key, arr[i].value);
 }
 
+int findNamePosition(char line[]) {
+    int position = 0;
+    char *token = strtok(line, ",");
+    while(token) {
+        if (strcmp(token, "\"name\"") == 0)
+            return position;
+        token = strtok(NULL, ",");
+        position += 1;
+    }
+
+    return -1;
+}
+
+char* getTweeterName(char line[], int namepos) {
+    int counter = 0;
+    char *token = strtok(line, ",");
+    while(counter < namepos) {
+        token = strtok(NULL, ",");
+        counter += 1;
+    }
+
+    return token;
+}
+
 int main (int argc, char *argv[]) {
     // array of tweeters
     struct Pair tweeters[MAX_USER];
