@@ -124,8 +124,18 @@ int main (int argc, char *argv[]) {
     fp = fopen(argv[1], "r");
     // fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
 
+    if (!fp) {
+        printf("ERROR: File not exist\n");
+        exit(1);
+    }
+
     fgets(buff, MAX_BUFFER, (FILE*)fp);
     int namepos = findNamePosition(buff);
+
+    if (namepos == -1) {
+        printf("ERROR: Invalid CSV File\n");
+        exit(1);
+    }
 
     int c = getc(fp);
     while (c != EOF) {
