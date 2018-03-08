@@ -13,16 +13,9 @@ struct Pair {
     int value;
 };
 
-void printMaxTweeter(struct Pair arr[]) {
-    // for (int i = 0; i < 10; i++)
-    //     printf("%s: %d\n", arr[i].key, arr[i].value);
-
-    int j = 1;
-    // print all noempty entries
-    while (j < MAX_USER && arr[j].value != -1) {
-        printf("%s: %d\n", arr[j].key, arr[j].value);
-        j += 1;
-    } 
+void printArray(struct Pair arr[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%s: %d\n", arr[i].key, arr[i].value);
 }
 
 int findNamePosition(char line[]) {
@@ -61,16 +54,59 @@ int containsKey(struct Pair arr[], char key[]){
     return 0;
 }
 
+void merge(struct Pair arr[], int l, int m, int r) {
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+ 
+    struct Pair L[n1], R[n2];
+ 
+    for (i = 0; i < n1; i++) {
+        strcpy(L[i].key, arr[l + i].key);
+        L[i].value = arr[l + i].value;
+    }
 
-int cmpfunc (const void * p1, const void * p2) {
-    int l = ((struct Pair *)p1)->value;
-    int r = ((struct Pair *)p2)->value; 
-    if (l < r)
-        return -1;
-    else if (l > r)
-        return +1;
-    else
-        return 0;
+    for (j = 0; j < n2; j++) {
+        strcpy(R[j].key,arr[m + 1+ j].key);
+        R[j].value = arr[m + 1+ j].value;        
+    }
+ 
+    i = 0; 
+    j = 0; 
+    k = l; 
+    while (i < n1 && j < n2) {
+        if (L[i].value <= R[j].value) {
+            strcpy(arr[k].key, R[j].key);
+            arr[k].value = R[j].value;
+            j++;
+        } else {
+            strcpy(arr[k].key, L[i].key);
+            arr[k].value = L[i].value;
+            i++;
+        }
+        k++;
+    }
+ 
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+ 
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(struct Pair arr[], int l, int r) {
+    if (l < r) {
+        int m = l+(r-l)/2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r); 
+        merge(arr, l, m, r);
+    }
 }
 
 int main (int argc, char *argv[]) {
@@ -85,17 +121,16 @@ int main (int argc, char *argv[]) {
 
     FILE *fp;
     char buff[512];
-//    fp = fopen(argv[1], "r");
-    fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
+    fp = fopen(argv[1], "r");
+    // fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
 
     fgets(buff, MAX_BUFFER, (FILE*)fp);
     int namepos = findNamePosition(buff);
 
     int c = getc(fp);
     while (c != EOF) {
+        char name[50];        
         fgets(buff, MAX_BUFFER, (FILE*)fp);
-        char name[50];
-
         strcpy(name, getTweeterName(buff, namepos));
 
         int tweeterpos = containsKey(tweeters, name);
@@ -111,8 +146,9 @@ int main (int argc, char *argv[]) {
         c = getc(fp);
     }
 
-    printMaxTweeter(tweeters);
-    
+    mergeSort(tweeters, 0, MAX_USER-1);
+    printArray(tweeters, 10);    
+
     fclose(fp);
 
     return 0;
