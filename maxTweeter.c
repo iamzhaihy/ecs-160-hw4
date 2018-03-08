@@ -3,9 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define LENGTH 10
 #define MAX_USER 10000
-#define MAX_LINE 20000
 #define MAX_BUFFER 512
 
 struct Pair {
