@@ -15,7 +15,7 @@ struct Pair {
 // helper function to print first n element
 void printArray(struct Pair arr[], int n) {
     for (int i = 0; i < n; i++) {
-        printf("%s: %d\n", arr[i].key, arr[i].value);        
+        printf("%s: %d\n", arr[i].key, arr[i].value);
     } // for
 } // printArray()
 
@@ -25,42 +25,44 @@ int findNamePosition(char line[]) {
     int position = 0;
 
     // split the string using commas
-    char *token = strtok(line, ",");
+    char *running = strdup(line);
+    char *token = strsep(&running, ",");
 
     // go through the columns and find "name"
-    while(token) {
-        // if exists, return its position 
-        if (strcmp(token, "\"name\"") == 0){
+    while (token) {
+        // if exists, return its position
+        if (strcmp(token, "\"name\"") == 0) {
             return position;
         }
         // if not, keep looping
-        token = strtok(NULL, ",");
+        token = strsep(&running, ",");
         position += 1;
     } // while
-    
+
     return -1;
 } // findNamePosition()
 
 // helper function to get the name of tweeter
-char* getTweeterName(char line[], int namepos) {
+char *getTweeterName(char line[], int namepos) {
     // split the string using commas
-    char *token = strtok(line, ",");
+    char *running = strdup(line);
+    char *token = strsep(&running, ",");
 
     // go to the specified position
     for (int i = 0; i < namepos; i++) {
-        token = strtok(NULL, ",");
+        token = strsep(&running, ",");
     } // for
 
     return token;
 } // getTweeterName()
 
 // helper function to check if the array contains the key
-int containsKey(struct Pair arr[], char key[]){
+int containsKey(struct Pair arr[], char key[]) {
     for (int pos = 1; pos < MAX_USER; pos++) {
         // if the array contains the key,
         // return its position
-        if (strcmp(arr[pos].key,key) == 0){
-            return pos;            
+        if (strcmp(arr[pos].key, key) == 0) {
+            return pos;
         }
         // if the array does not contain the key,
         // return the position it can be added
@@ -76,9 +78,9 @@ void merge(struct Pair arr[], int l, int m, int r) {
     int i, j, k;        // iterators
     int n1 = m - l + 1; // legnth of Left array
     int n2 = r - m;     // length of Right array
- 
+
     struct Pair L[n1], R[n2];
- 
+
     // populate Left array
     for (i = 0; i < n1; i++) {
         strcpy(L[i].key, arr[l + i].key);
@@ -87,13 +89,13 @@ void merge(struct Pair arr[], int l, int m, int r) {
 
     // populate Right array
     for (j = 0; j < n2; j++) {
-        strcpy(R[j].key,arr[m + 1+ j].key);
-        R[j].value = arr[m + 1+ j].value;        
+        strcpy(R[j].key, arr[m + 1 + j].key);
+        R[j].value = arr[m + 1 + j].value;
     } // for
- 
+
     // reset iterators
     i = 0;
-    j = 0; 
+    j = 0;
     k = l;
 
     // merge two arrays
@@ -108,35 +110,35 @@ void merge(struct Pair arr[], int l, int m, int r) {
             arr[k].value = L[i].value;
             i++;
         } // else
-        
+
         k++;
     } // while
- 
+
     // fill in the remaining element
     while (i < n1) {
         arr[k] = L[i];
         i++;
         k++;
     } // while
- 
+
     while (j < n2) {
         arr[k] = R[j];
         j++;
         k++;
-    } // while 
+    } // while
 } // merge()
 
 // body of Merge-Sort Procedure
 void mergeSort(struct Pair arr[], int l, int r) {
     if (l < r) {
-        int m = l + (r - l)/2;
+        int m = l + (r - l) / 2;
         mergeSort(arr, l, m);
-        mergeSort(arr, m+1, r); 
+        mergeSort(arr, m + 1, r);
         merge(arr, l, m, r);
     } // if
 } // mergeSort()
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     // array of tweeters
     struct Pair tweeters[MAX_USER];
 
@@ -150,7 +152,8 @@ int main (int argc, char *argv[]) {
     // declare buffer
     char buff[MAX_BUFFER];
     // open the file, whose path is given by argv[1]
-    fp = fopen(argv[1], "r");
+//    fp = fopen(argv[1], "r");
+    fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
 
     // if the file does not exist
     if (!fp) {
@@ -160,11 +163,11 @@ int main (int argc, char *argv[]) {
     } // if
 
     // read in the first line (header)
-    fgets(buff, MAX_BUFFER, (FILE*)fp);
+    fgets(buff, MAX_BUFFER, (FILE *) fp);
     // find the position of column "name"
     int namepos = findNamePosition(buff);
 
-    // if the file is not valid
+    // if the file does not have "name" colum
     if (namepos == -1) {
         // print error message and exist
         printf("ERROR: Invalid CSV File\n");
@@ -188,7 +191,7 @@ int main (int argc, char *argv[]) {
 
         char tname[50];
         // read in the next line
-        fgets(buff, MAX_BUFFER, (FILE*)fp);
+        fgets(buff, MAX_BUFFER, (FILE *) fp);
         // get tweeter's name and "assign" it to tname
         strcpy(tname, getTweeterName(buff, namepos));
 
@@ -206,16 +209,16 @@ int main (int argc, char *argv[]) {
             // initialize the count to be 1
             tweeters[pos].value = 1;
         } // else
-        
+
         c = getc(fp);
         lineCounter++;
     } // while
 
     // sort tweeters by value in decreasing order
-    mergeSort(tweeters, 0, MAX_USER-1);
+    mergeSort(tweeters, 0, MAX_USER - 1);
 
     // print the first 10 in the array
-    printArray(tweeters, 10);    
+    printArray(tweeters, 10);
 
     // close the file
     fclose(fp);
