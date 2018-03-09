@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #define MAX_USER 10000
+#define MAX_LINE 20000
 #define MAX_BUFFER 512
 
 struct Pair {
@@ -173,8 +174,18 @@ int main (int argc, char *argv[]) {
     // read in the next char
     int c = getc(fp);
 
+    // keep track of the number of lines
+    int lineCounter = 0;
+
     // while EOF is not reached
     while (c != EOF) {
+        // if the file has too many lines
+        if (lineCounter >= MAX_LINE) {
+            // print error message and exist
+            printf("ERROR: File Too Large\n");
+            exit(1);
+        } // if
+
         char tname[50];
         // read in the next line
         fgets(buff, MAX_BUFFER, (FILE*)fp);
@@ -197,6 +208,7 @@ int main (int argc, char *argv[]) {
         } // else
         
         c = getc(fp);
+        lineCounter++;
     } // while
 
     // sort tweeters by value in decreasing order
