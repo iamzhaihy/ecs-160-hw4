@@ -15,7 +15,9 @@ struct Pair {
 // helper function to print first n element
 void printArray(struct Pair arr[], int n) {
     for (int i = 0; i < n; i++) {
-        printf("%s: %d\n", arr[i].key, arr[i].value);
+        if (arr[i].value != -1) {
+            printf("%s: %d\n", arr[i].key, arr[i].value);
+        } // if
     } // for
 } // printArray()
 
@@ -31,7 +33,7 @@ int findNamePosition(char line[]) {
     // go through the columns and find "name"
     while (token) {
         // if exists, return its position
-        if (strcmp(token, "\"name\"") == 0) {
+        if (strcmp(token, "\"name\"") == 0 || strcmp(token, "name") == 0) {
             return position;
         }
         // if not, keep looping
@@ -152,8 +154,8 @@ int main(int argc, char *argv[]) {
     // declare buffer
     char buff[MAX_BUFFER];
     // open the file, whose path is given by argv[1]
-//    fp = fopen(argv[1], "r");
-    fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
+    fp = fopen(argv[1], "r");
+    // fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
 
     // if the file does not exist
     if (!fp) {
