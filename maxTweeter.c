@@ -65,12 +65,12 @@ int containsKey(struct Pair arr[], char key[]) {
         // return its position
         if (strcmp(arr[pos].key, key) == 0) {
             return pos;
-        }
+        } // if
         // if the array does not contain the key,
         // return the position it can be added
         if (arr[pos].value == -1) {
             return -1 * pos;
-        }
+        } // if
     } // for
     return 0;
 } // containsKey()
@@ -155,7 +155,6 @@ int main(int argc, char *argv[]) {
     char buff[MAX_BUFFER];
     // open the file, whose path is given by argv[1]
     fp = fopen(argv[1], "r");
-    // fp = fopen("/Users/zhaihy/Desktop/ecs-160-hw4/cl-tweets-short.csv", "r");
 
     // if the file does not exist
     if (!fp) {
@@ -176,14 +175,17 @@ int main(int argc, char *argv[]) {
         exit(1);
     } // if
 
-    // read in the next char
-    int c = getc(fp);
-
     // keep track of the number of lines
     int lineCounter = 0;
 
-    // while EOF is not reached
-    while (c != EOF) {
+    // read in the file line by line
+    while (1) {
+    		// read in next line to the buffer
+    		if (fgets(buff,MAX_LINE, fp) == NULL) {
+    			// stop looping when EOF is reached
+    			break;
+    		} // if
+
         // if the file has too many lines
         if (lineCounter >= MAX_LINE) {
             // print error message and exist
@@ -191,12 +193,10 @@ int main(int argc, char *argv[]) {
             exit(1);
         } // if
 
+        // tweeter's name
         char tname[50];
-        // read in the next line
-        fgets(buff, MAX_BUFFER, (FILE *) fp);
         // get tweeter's name and "assign" it to tname
         strcpy(tname, getTweeterName(buff, namepos));
-
         // check if we have the info about this tweeter
         int tpos = containsKey(tweeters, tname);
 
@@ -212,7 +212,6 @@ int main(int argc, char *argv[]) {
             tweeters[pos].value = 1;
         } // else
 
-        c = getc(fp);
         lineCounter++;
     } // while
 
