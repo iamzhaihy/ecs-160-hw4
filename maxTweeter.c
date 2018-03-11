@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
         char tname[50];
         // get tweeter's name and "assign" it to tname
         char* temptname = getTweeterName(buff, namepos);
-        if ((temptname == '\0' )||(*temptname)=='\0'){
+        if ((temptname == NULL )||(*temptname)=='\0'){
             printf("ERROR:name doesn't exist in one line\n");
             printf("invalid CSV file\n");
             exit(1);
