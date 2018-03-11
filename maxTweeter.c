@@ -50,6 +50,10 @@ char *getTweeterName(char line[], int namepos) {
     char *running = strdup(line);
     char *token = strsep(&running, ",");
 
+    if (namepos == 0){
+        return token;
+    }
+
     // go to the specified position
     for (int i = 0; i < namepos; i++) {
         token = strsep(&running, ",");
