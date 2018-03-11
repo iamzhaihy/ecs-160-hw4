@@ -58,7 +58,6 @@ char *getTweeterName(char line[], int namepos) {
     for (int i = 0; i < namepos; i++) {
         token = strsep(&running, ",");
     } // for
-
     return token;
 } // getTweeterName()
 
@@ -178,7 +177,6 @@ int main(int argc, char *argv[]) {
         printf("ERROR: Invalid CSV File\n");
         exit(1);
     } // if
-
     // keep track of the number of lines
     int lineCounter = 0;
 
@@ -196,14 +194,18 @@ int main(int argc, char *argv[]) {
             printf("ERROR: File Too Large\n");
             exit(1);
         } // if
-
         // tweeter's name
         char tname[50];
         // get tweeter's name and "assign" it to tname
+        char* temptname = getTweeterName(buff, namepos);
+        if ((temptname == '\0' )||(*temptname)=='\0'){
+            printf("ERROR:name doesn't exist in one line\n");
+            printf("invalid CSV file\n");
+            exit(1);
+        }
         strcpy(tname, getTweeterName(buff, namepos));
         // check if we have the info about this tweeter
         int tpos = containsKey(tweeters, tname);
-
         if (tpos > 0) {
             // we have his/her info, increment counter
             tweeters[tpos].value += 1;
