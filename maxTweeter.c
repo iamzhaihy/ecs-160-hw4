@@ -12,6 +12,8 @@ struct Pair {
     int value;    // number of tweets
 };
 
+int colcount;
+
 // helper function to print first n element
 void printArray(struct Pair arr[], int n) {
     for (int i = 0; i < n; i++) {
@@ -49,9 +51,9 @@ char *getTweeterName(char line[], int namepos) {
     // split the string using commas
     char *running = strdup(line);
     char *token = strsep(&running, ",");
-
     //if name's the first column
     if (namepos == 0){
+
         return token;
     }
 
@@ -59,6 +61,7 @@ char *getTweeterName(char line[], int namepos) {
     for (int i = 0; i < namepos; i++) {
         token = strsep(&running, ",");
     } // for
+
     return token;
 } // getTweeterName()
 
@@ -172,7 +175,7 @@ int main(int argc, char *argv[]) {
     // find the position of column "name"
     int namepos = findNamePosition(buff);
 
-    // if the file does not have "name" colum
+    // if the file does not have "name" column
     if (namepos == -1) {
         // print error message and exist
         printf("ERROR: Invalid CSV File\n");
@@ -200,15 +203,25 @@ int main(int argc, char *argv[]) {
         char tname[50];
         // get tweeter's name and "assign" it to a tempt variable
         char* temptname = getTweeterName(buff, namepos);
-        //if for this line the name column contains nothing, exit.
-        if ((temptname == NULL )||(*temptname)=='\0'){
-            printf("ERROR:name doesn't exist in one line\n");
+
+        //if for this line the pointer to the name column contains nothing, exit.
+        if (temptname == NULL){
+            printf("ERROR:name column doesn't exist in one line\n");
             printf("invalid CSV file\n");
             exit(1);
         }
         
+
+        //if for this line the name column contains nothing, make it empty string.
+        if (temptname[0]=='\0'){
+            strcpy(tname, "");
+        }
+        
         //if we get the name which is not empty
-        strcpy(tname, getTweeterName(buff, namepos));
+        else if ((*temptname)!='\0'){
+            strcpy(tname, getTweeterName(buff, namepos));
+        }
+        
         // check if we have the info about this tweeter
         int tpos = containsKey(tweeters, tname);
         if (tpos > 0) {
