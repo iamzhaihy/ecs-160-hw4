@@ -29,7 +29,7 @@ int findColumnCount(char line[]) {
     char *running = strdup(line);
     char *token = strsep(&running, ",");
     int count = 1;
-    
+
     while (token) {
         //keep looping until token is NULL, which means we've reached end
         token = strsep(&running, ",");
@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     } // if
 
-    // read in the first line (header)
+    // read in the first line (header)d
     fgets(buff, MAX_BUFFER, (FILE *) fp);
     // find the position of column "name"
     int namepos = findNamePosition(buff);
@@ -215,7 +215,6 @@ int main(int argc, char *argv[]) {
             printf("ERROR: File Too Large\n");
             exit(1);
         } // if
-        
         //if this line has different column counts than the header
         if (findColumnCount(buff) != header_count){
             printf("ERROR:a line has different number of columns than header\n");
