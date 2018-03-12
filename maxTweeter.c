@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     } // if
 
-    // read in the first line (header)d
+    // read in the first line (header)
     fgets(buff, MAX_BUFFER, (FILE *) fp);
     // find the position of column "name"
     int namepos = findNamePosition(buff);
