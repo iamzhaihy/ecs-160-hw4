@@ -50,6 +50,7 @@ char *getTweeterName(char line[], int namepos) {
     char *running = strdup(line);
     char *token = strsep(&running, ",");
 
+    //if name's the first column
     if (namepos == 0){
         return token;
     }
@@ -182,11 +183,12 @@ int main(int argc, char *argv[]) {
 
     // read in the file line by line
     while (1) {
-    		// read in next line to the buffer
-    		if (fgets(buff,MAX_LINE, fp) == NULL) {
-    			// stop looping when EOF is reached
-    			break;
-    		} // if
+    	// read in next line to the buffer
+    	if (fgets(buff,MAX_LINE, fp) == NULL) {
+    		// stop looping when EOF is reached
+    		break;
+    	} // if
+        
 
         // if the file has too many lines
         if (lineCounter >= MAX_LINE) {
@@ -196,13 +198,16 @@ int main(int argc, char *argv[]) {
         } // if
         // tweeter's name
         char tname[50];
-        // get tweeter's name and "assign" it to tname
+        // get tweeter's name and "assign" it to a tempt variable
         char* temptname = getTweeterName(buff, namepos);
+        //if for this line the name column contains nothing, exit.
         if ((temptname == NULL )||(*temptname)=='\0'){
             printf("ERROR:name doesn't exist in one line\n");
             printf("invalid CSV file\n");
             exit(1);
         }
+        
+        //if we get the name which is not empty
         strcpy(tname, getTweeterName(buff, namepos));
         // check if we have the info about this tweeter
         int tpos = containsKey(tweeters, tname);
@@ -220,6 +225,13 @@ int main(int argc, char *argv[]) {
 
         lineCounter++;
     } // while
+
+    //if the file has too few lines
+        if (lineCounter < 1) {
+            // print error message and exist
+            printf("ERROR: File no line\n");
+            exit(1);
+        }
 
     // sort tweeters by value in decreasing order
     mergeSort(tweeters, 0, MAX_USER - 1);
