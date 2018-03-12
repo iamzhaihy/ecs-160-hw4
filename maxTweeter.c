@@ -218,7 +218,6 @@ int main(int argc, char *argv[]) {
             exit(1);
         } // if
         
-        printf("column count:%i\n",findColumnCount(buff));
         //if this line has different column counts than the header
         if (findColumnCount(buff) != header_count){
             printf("ERROR:a line has different number of columns than header\n");
