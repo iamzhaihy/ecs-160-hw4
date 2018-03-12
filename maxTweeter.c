@@ -28,15 +28,15 @@ int findColumnCount(char line[]) {
     // split the string using commas
     char *running = strdup(line);
     char *token = strsep(&running, ",");
-    int count = 1;
 
     while (token) {
         //keep looping until token is NULL, which means we've reached end
         token = strsep(&running, ",");
         position += 1;
-    }
+    } // while 
+
     return position;
-}
+} // findColumnCount()
 
 // helper function to find the column called "name"
 // return -1 if such a column does not exist
@@ -66,11 +66,11 @@ char *getTweeterName(char line[], int namepos) {
     // split the string using commas
     char *running = strdup(line);
     char *token = strsep(&running, ",");
+    
     //if name's the first column
     if (namepos == 0){
-
         return token;
-    }
+    } // if
 
     // go to the specified position
     for (int i = 0; i < namepos; i++) {
@@ -88,6 +88,7 @@ int containsKey(struct Pair arr[], char key[]) {
         if (arr[pos].value == -1) {
             return -1 * pos;
         } // if
+
         // if the array contains the key,
         // return its position
         if (strcmp(arr[pos].key, key) == 0) {
@@ -197,6 +198,7 @@ int main(int argc, char *argv[]) {
         printf("ERROR: Invalid CSV File\n");
         exit(1);
     } // if
+
     // keep track of the number of lines
     int lineCounter = 0;
 
@@ -207,7 +209,6 @@ int main(int argc, char *argv[]) {
     		// stop looping when EOF is reached
     		break;
     	} // if
-        
 
         // if the file has too many lines
         if (lineCounter >= MAX_LINE) {
@@ -215,12 +216,12 @@ int main(int argc, char *argv[]) {
             printf("ERROR: File Too Large\n");
             exit(1);
         } // if
+
         //if this line has different column counts than the header
         if (findColumnCount(buff) != header_count){
-            printf("ERROR:a line has different number of columns than header\n");
-            printf("invalid CSV file\n");
+            printf("ERROR: Columns Do Not Match\n");
             exit(1);
-        }
+        } // if
         
         // tweeter's name
         char tname[50];
@@ -229,20 +230,17 @@ int main(int argc, char *argv[]) {
 
         //if for this line the pointer to the name column contains nothing, exit.
         if (temptname == NULL){
-            printf("ERROR:name column doesn't exist in one line\n");
-            printf("invalid CSV file\n");
+            printf("ERROR: Missing Value \"Name\"\n");
             exit(1);
-        }
+        } // if
         
         //if for this line the name column contains nothing, make it empty string.
         if (temptname[0]=='\0'){
             strcpy(tname, "");
-        }
-        
-        //if we get the name which is not empty
-        else if ((*temptname)!='\0'){
+        } else if ((*temptname)!='\0'){
+            //if we get the name which is not empty
             strcpy(tname, getTweeterName(buff, namepos));
-        }
+        } // elif
         
         // check if we have the info about this tweeter
         int tpos = containsKey(tweeters, tname);
@@ -262,11 +260,11 @@ int main(int argc, char *argv[]) {
     } // while
 
     //if the file has too few lines
-        if (lineCounter < 1) {
-            // print error message and exist
-            printf("ERROR: File no line\n");
-            exit(1);
-        }
+    if (lineCounter < 1) {
+        // print error message and exist
+        printf("ERROR: File no line\n");
+        exit(1);
+    } // if
 
     // sort tweeters by value in decreasing order
     mergeSort(tweeters, 0, MAX_USER - 1);
