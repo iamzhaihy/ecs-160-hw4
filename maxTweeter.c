@@ -12,6 +12,8 @@ struct Pair {
     int value;    // number of tweets
 };
 
+int colcount;
+
 // helper function to print first n element
 void printArray(struct Pair arr[], int n) {
     for (int i = 0; i < n; i++) {
@@ -20,6 +22,23 @@ void printArray(struct Pair arr[], int n) {
         } // if
     } // for
 } // printArray()
+
+// helper function to find the number of columns in a line
+int findColumnCount(char line[]) {
+    int position = 0;
+    
+    // split the string using commas
+    char *running = strdup(line);
+    char *token = strsep(&running, ",");
+    int count = 1;
+    
+    while (token) {
+        //keep looping until token is NULL, which means we've reached end
+        token = strsep(&running, ",");
+        position += 1;
+    }
+    return position;
+}
 
 // helper function to find the column called "name"
 // return -1 if such a column does not exist
@@ -172,6 +191,7 @@ int main(int argc, char *argv[]) {
     fgets(buff, MAX_BUFFER, (FILE *) fp);
     // find the position of column "name"
     int namepos = findNamePosition(buff);
+    int header_count = findColumnCount(buff);
 
     // if the file does not have "name" column
     if (namepos == -1) {
@@ -197,6 +217,15 @@ int main(int argc, char *argv[]) {
             printf("ERROR: File Too Large\n");
             exit(1);
         } // if
+        
+        printf("column count:%i\n",findColumnCount(buff));
+        //if this line has different column counts than the header
+        if (findColumnCount(buff) != header_count){
+            printf("ERROR:a line has different number of columns than header\n");
+            printf("invalid CSV file\n");
+            exit(1);
+        }
+        
         // tweeter's name
         char tname[50];
         // get tweeter's name and "assign" it to a tempt variable
@@ -209,7 +238,6 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
         
-
         //if for this line the name column contains nothing, make it empty string.
         if (temptname[0]=='\0'){
             strcpy(tname, "");
