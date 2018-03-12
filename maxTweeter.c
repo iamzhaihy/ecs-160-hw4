@@ -83,15 +83,15 @@ char *getTweeterName(char line[], int namepos) {
 // helper function to check if the array contains the key
 int containsKey(struct Pair arr[], char key[]) {
     for (int pos = 1; pos < MAX_USER; pos++) {
+ 	// if the array does not contain the key,
+        // return the position it can be added
+        if (arr[pos].value == -1) {
+            return -1 * pos;
+        } // if
         // if the array contains the key,
         // return its position
         if (strcmp(arr[pos].key, key) == 0) {
             return pos;
-        } // if
-        // if the array does not contain the key,
-        // return the position it can be added
-        if (arr[pos].value == -1) {
-            return -1 * pos;
         } // if
     } // for
     return 0;
