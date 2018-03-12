@@ -12,8 +12,6 @@ struct Pair {
     int value;    // number of tweets
 };
 
-int colcount;
-
 // helper function to print first n element
 void printArray(struct Pair arr[], int n) {
     for (int i = 0; i < n; i++) {
